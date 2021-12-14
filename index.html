@@ -1,0 +1,522 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>React Hooks</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<img src="./images/react-spinner.gif" width="300" alt="">
+					<h2>React Hooks</h2>
+					<p>By Narendran S</p>
+					<p style="color: #888; font-size: 0.5em;">
+						Use <span style="color: magenta; border: 1px solid; border-radius: 6px; padding: 0px 10px;">Spacebar</span> to navigate
+					</p>
+				</section>
+
+				<section>
+					<h3>Agenda</h3>
+					<ul>
+						<li>ReactJS - Recap</li>
+						<li>Functional Component & Hooks</li>
+						<li>UseState & UseEffect</li>
+						<li>UseMemo & UseCallback</li>
+						<li>UseRef & UseImperativeHandle</li>
+						<li>UseContext & useReducer</li>
+						<li>Custom Hooks</li>
+						<li>Excercise</li>
+					</ul>
+				</section>
+
+				<section>
+					<section>
+						<h2>Lets Recap ReactJS</h2>
+					</section>
+					<section>
+						<h2>Fundamentals</h2>
+						<img src="./images/react-fundamentals.jpg" width="600" alt="fundamentals" />
+					</section>
+					<section>
+						<h2>Extending React.Component</h2>
+						<pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|3|5-7">
+							import React from 'react';
+
+							class App extends React.Component {
+
+								render () {
+									return <div>Content</div>
+								}
+							}
+
+							export default App;
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Functional Components<br/> & Hooks</h2>
+					</section>
+					<section>
+						<h2>Functional Component</h2>
+						<pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers>
+							const App = () => {
+								return <div>Content</div>
+							}
+
+							export default App;
+						</code></pre>
+						<p style="font-size: 0.5em; opacity: 0.66;">Note: With the new transform from React 17, you can use JSX without importing React.</p>
+					</section>
+					<section>
+						<h2>State & Props</h2>
+						<pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|1|3|4|6">
+							import { useState } from 'react';
+
+							const App = (props) => {
+								const [language, changeLanguage] = useState("English");
+
+								return <div>{props.title} - {language}</div>
+							}
+
+							export default App;
+						</code></pre>
+					</section>
+					<section>
+						<h3>React Hooks</h3>
+						<ul>
+							<li>useState</li>
+							<li>useEffect</li>
+							<li>useContext</li>
+							<li>useReducer</li>
+							<li>useCallback</li>
+							<li>useMemo</li>
+							<li>useRef</li>
+							<li>useImperativeHandle</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>useState</h2>
+						<img src="./images/useState.jpg" width="900" alt="fundamentals" />
+					</section>
+					<section>
+						<h3>From Documentation..</h3>
+						<ul style="font-size: .75em;">
+							<li>The React useState Hook allows us to use state in a function component.</li>
+							<li style="margin-top: 1em; margin-bottom: 1em;">UseState returns a stateful value, and a function to update it.</li>
+						</ul>
+					</section>
+					<section>
+						<h2>UseState Example</h2>
+						<pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|1|4|5">
+							import { useState } from 'react';
+
+							export default () => {
+								const [language, changeLanguage] = useState("English");
+								return <div>Current Language - {language}</div>
+							}
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>useEffect</h2>
+						<img src="./images/useeffect.jpg" width="600" alt="fundamentals" />
+					</section>
+					<section>
+						<h3>From Documentation..</h3>
+						<ul style="font-size: .75em;">
+							<li>The Effect Hook lets you perform side effects in function components.</li>
+							<li style="margin-top: 1em; margin-bottom: 1em;">Data fetching, setting up a subscription, and manually changing the DOM in React components are all examples of side effects.</li>
+							<li>If you’re familiar with React class lifecycle methods, you can think of useEffect Hook as <span class="pinktext">componentDidMount, componentDidUpdate</span> and <span class="pinktext">componentWillUnmount</span> combined.</li>
+						</ul>
+					</section>
+					<section>
+						<h3>UseEffect Example</h3>
+						<pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|1|6-12">
+							import { useState, useEffect } from 'react';
+
+							export default () => {
+								const [counter, changeCounter] = useState(0);
+
+								useEffect( () => {
+									const timer = setTimeout( () => {
+										changeCounter(counter + 1);
+									}, 1000);
+
+									return () => { clearInterval(timer) }
+								}, [counter])
+
+								return <div>Counter - {counter}</div>
+							}
+						</code></pre>
+					</section>
+					<section>
+						<h2>Anonymous Callback for side effects</h2>
+						<p>When the component re-renders this callback runs, and the side effect will be performed.</p>
+					</section>
+					<section>
+						<h2>Optional Dependency Array</h2>
+						<p>When the component re-renders, We can add dependency here, whether the callback needs to run or not. We can add state or props or empty values. If we skip this option useeffect will run for every re-renders</p>
+					</section>
+					<section>
+						<h2>Optional Cleanup function</h2>
+						<p>the useEffect cleanup function helps developers clean effects that prevent unwanted behaviors and optimizes application performance.</p>
+					</section>
+					<section>
+						<h2>Multiple UseEffect</h2>
+						<pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|1-5|7-9">
+							useEffect( () => {
+								const timer = setTimeout( () => {
+									changeCounter(counter + 1);
+								}, 1000);
+							}, [counter]) /* state */
+
+							useEffect( () => {
+								document.title = props.path + ' Page';
+							}, [props.path]) /* props */
+						</code></pre>
+					</section>
+					<section>
+						<h3>How dependency array Runs?</h3>
+						<img src="./images/useeffect-multiple.jpg" width="800" alt="fundamentals" />
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>useMemo</h2>
+						<img src="./images/useMemo.jpg" width="900" alt="fundamentals" />
+					</section>
+					<section>
+						<h3>From Documentation..</h3>
+						<ul style="font-size: .75em;">
+							<li>useMemo Hook returns a memoized value.</li>
+							<li style="margin-top: 1em;">The useMemo Hook only runs when one of its dependencies update. This can improve performance.</li>
+						</ul>
+					</section>
+					<section>
+						<h3>useMemo Example</h3>
+						<pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|1|4|8-11|5">
+							import { useMemo } from 'react';
+
+							export default () => {
+								const memoizedValue = useMemo(() => someFunction(a, b), [a, b]);
+								return <div>Total - {memoizedValue}</div>
+							}
+
+							someFunction(a, b) {
+								...
+								return ...
+							}
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>useCallback</h2>
+						<img src="./images/useCallback.jpg" width="900" alt="fundamentals" />
+					</section>
+					<section>
+						<h3>From Documentation..</h3>
+						<ul style="font-size: .75em;">
+							<li>useCallback Hook returns a memoized callback function.</li>
+							<li style="margin-top: 1em; margin-bottom: 1em;">useCallback Hook only runs when one of its dependencies update. This can improve performance.</li>
+							<li>The useCallback and useMemo Hooks are similar. The main difference is that useMemo returns a memoized value and useCallback returns a memoized function.</li>
+						</ul>
+					</section>
+					<section>
+						<h3>useCallback Example</h3>
+						<pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|1|4-7|8">
+							import { useCallback } from 'react';
+
+							export default () => {
+								const handleClick = useCallback(() => {
+									// handle the click event
+								}, []);
+
+								return &lt;MyChild onClick={handleClick} />;
+							}
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>useRef</h2>
+						<img src="./images/useRef.jpg" width="900" alt="fundamentals" />
+					</section>
+					<section>
+						<h3>From Documentation..</h3>
+						<ul style="font-size: .75em;">
+							<li>useRef Hook allows you to persist values between renders. It can be used to store a mutable value that does not cause a re-render when updated.</li>
+							<li style="margin-top: 1em; margin-bottom: 1em;">It can be used to access a DOM element directly with the help of 'ref' in reactElement</li>
+						</ul>
+					</section>
+					<section>
+						<h3>useRef Example</h3>
+						<pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|1|4|10|6">
+							import { useRef } from 'react';
+
+							export default () => {
+								const inputEl = useRef(null);
+								const onButtonClick = () => {
+									inputEl.current.focus();
+								};
+								return (
+									<>
+										<input ref={inputEl} type="text" />
+										<button onClick={onButtonClick}>Focus the input</button>
+									</>
+								);
+							}
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>useImperativeHandle</h2>
+						<img src="./images/useImperativeHandle.jpg" width="900" alt="fundamentals" />
+					</section>
+					<section>
+						<h3>From Documentation..</h3>
+						<ul style="font-size: .75em;">
+							<li>useImperativeHandle customizes the instance value that is exposed to parent components when using ref</li>
+							<li style="margin-top: 1em; margin-bottom: 1em;">useImperativeHandle should be used with forwardRef.</li>
+							<li>It allows you to replace native functions (such as blur, focus, etc) with functions of your own, thus allowing side-effects to the normal behavior, or a different behavior altogether.</li>
+						</ul>
+					</section>
+					<section>
+						<h3>useImperativeHandle Example</h3>
+						<pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|1|13-21|3-11|4|5-9|3|14|17-18">
+							import { useImperativeHandle, forwardRef, useRef } from "react";
+
+							const FancyInput = forwardRef((props, ref) => {
+								const inputRef = useRef();
+								useImperativeHandle(ref, () => ({
+									activateFocus: () => {
+										inputRef.current.focus();
+									}
+								}));
+								return &lt;input ref={inputRef} />;
+							});
+							  
+							function App() {
+								const inputRef = useRef();
+								return (
+									&lt;div className="App">
+										&lt;FancyInput ref={inputRef} />
+										&lt;button onClick={() => inputRef.current.activateFocus()}>Focus</button>
+									&lt;/div>
+								);
+							}
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>useContext</h2>
+						<img src="./images/useContext.jpg" width="900" alt="fundamentals" />
+					</section>
+					<section>
+						<h3>From Documentation..</h3>
+						<ul style="font-size: .75em;">
+							<li>React Context (createContext, Provider, useContext) is a way to manage state globally.</li>
+							<li style="margin-top: 1em; margin-bottom: 1em;">
+								UseContext accepts a context object (the value returned from createContext) and returns the current context value for that context.
+							</li>
+							<li>A component calling useContext will always re-render when the context value changes.</li>
+						</ul>
+					</section>
+					<section>
+						<h2>useContext Example</h2>
+						<pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|1|3-10|4|6|12-19|12|15">
+							import React, { useContext } from 'react';
+
+							function ThemedButton(props) {
+								const theme = useContext(ThemeContext);
+								return (
+									&lt;button style={{ background: theme.background, color: theme.foreground }}>
+										I am styled by theme context!
+									&lt;/button>
+								);
+							}
+
+							const ThemeContext = React.createContext(themes.light);
+							function App() {
+								return (
+									&lt;ThemeContext.Provider value={themes.dark}>
+										&lt;ThemedButton />
+									&lt;/ThemeContext.Provider>
+								);
+							}
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>useReducer</h2>
+						<img src="./images/useReducer.jpg" width="900" alt="fundamentals" />
+					</section>
+					<section>
+						<h3>From Documentation..</h3>
+						<ul style="font-size: .75em;">
+							<li>UseReducer contains your custom state logic and the initialState. It can be a simple value but generally will contain an object.</li>
+							<li style="margin-top: 1em; margin-bottom: 1em;">The useReducer Hook returns the current state and a dispatch method..</li>
+						</ul>
+					</section>
+					<section>
+						<h2>useReducer Example</h2>
+						<pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|1|3|5-14|16-25">
+							import { useState } from 'react';
+							
+							const initialState = {count: 0};
+							
+							function reducer(state, action) {
+								switch (action.type) {
+									case 'increment':
+									return {count: state.count + 1};
+									case 'decrement':
+									return {count: state.count - 1};
+									default:
+									throw new Error();
+								}
+							}
+							
+							function Counter() {
+								const [state, dispatch] = useReducer(reducer, initialState);
+								return (
+									<>
+									Count: {state.count}
+									&lt;button onClick={() => dispatch({type: 'decrement'})}>-&lt;/button>
+									&lt;button onClick={() => dispatch({type: 'increment'})}>+&lt;/button>
+									</>
+								);
+							}
+						</code></pre>
+					</section>
+				</section>
+					
+					
+				<section>
+					<section>
+						<h2>React Custom Hooks</h2>
+						<img src="./images/customHook.jpg" width="900" alt="fundamentals" />
+					</section>
+
+					<section>
+						<h3>When </h3>
+						<ul>
+							<li>When you have component logic that needs to be used by multiple components, we can extract that logic to a custom Hook.</li>
+							<li style="margin-top: 0.5em;">Custom Hooks start with "use". Example: useFetch.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Example</h2>
+						<pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|4|18|21-28|22|25">
+							// File 1 - useApi.js
+							import { useState } from 'react';
+
+							export default function useApi(baseUrl) {
+								const [data, setData] = useState([]);
+								const [isQuerying, setIsQuerying] = useState(false);
+							
+								const list = async () => {
+									setIsQuerying(true);
+									const res = await fetch(baseUrl);
+									const resData = await res.json();
+									setData([...resData]);
+									setIsQuerying(false);
+								};
+							
+								const api = { list };
+							
+								return [data, isQuerying, api];
+							}
+
+							// File 2
+							import useApi from "./useApi.js";
+							export default function TodoList(props) {
+								const BASE_URL = `https://wixsite.todo-api/todo/${props.id}`;
+								const [data, isQuerying, api] = useApi(BASE_URL);
+
+								return ...
+							}
+						</code></pre>
+					</section>
+					<section>
+						<h3>NPM Packages with Custom hooks</h3>
+						<ul style="font-size: .75em;">
+							<li>useClippy from <a href="https://www.npmjs.com/package/use-clippy" target="_blank">use-clippy</a></li>
+							<li>useScript from <a href="https://www.npmjs.com/package/react-script-hook" target="_blank">react-script-hook</a></li>
+							<li>useLocalStorage from <a href="https://www.npmjs.com/package/@rehooks/local-storage" target="_blank">@rehooks/local-storage</a></li>
+							<li>useSpeechRecognition from <a href="https://www.npmjs.com/package/react-speech-kit" target="_blank">react-speech-kit</a></li>
+						</ul>
+					</section>
+				</section>
+
+				<section data-background="./images/exercise.jpg">
+					<h2>Excercise</h2>
+					<ul>
+						<li>
+							<a href="https://blog.devcher.com/hooks-workout-lesson-1-your-first-hooks-app/" target="_blank">Follow and Create - 1</a>
+						</li>
+						<li>
+							<a href="https://blog.devcher.com/hooks-workout-lesson-2-advanced-hooks/" target="_blank">Follow and Create - 2</a>
+						</li>
+						<li>
+							<a href="https://blog.devcher.com/hooks-workout-lesson-4-custom-reusable-hooks/" target="_blank">Follow and Create - 3</a>
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>Thank You</h1>
+					<p><small>Any doubts? Reach me @ <br/> <u>narendran.s@foodhub.com</u></small></p>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+		<style>
+			.reveal-viewport {background: #212121;}
+			.reveal .code-wrapper {font-size: 0.5em;}
+			.pinktext {color:magenta}
+		</style>
+	</body>
+</html>
